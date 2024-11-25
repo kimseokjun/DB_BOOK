@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>ISBN</th>  <th>제목</th>  <th>작가</th>
+                <!--        <th>등급</th>  <th>Job</th>  <th>적립금</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td> <a th:href="@{|/selectOne?id=${book.ISBN}|}" th:text="${book.ISBN}"></a> </td>
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <!--        <td th:text="${customer.levels}"></td>-->
+                <!--        <td th:text="${customer.job}"></td>        -->
+                <!--        <td th:text="${customer.point}"></td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+<p>
+    <a href="/">Home</a>
+</p>
+</body>
+</html>
