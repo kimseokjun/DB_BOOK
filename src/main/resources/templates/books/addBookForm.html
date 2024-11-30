@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Book</title>
+</head>
+<body>
+<h1>책 추가</h1>
+<form action="/books/add" method="post" th:object="${book}">
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn" name="ISBN" th:field="*{ISBN}" required>
+    <br>
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" th:field="*{title}" required>
+    <br>
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author" th:field="*{author}" required>
+    <br>
+    <label for="publisher">Publisher:</label>
+    <input type="text" id="publisher" name="publisher" th:field="*{publisher}" required>
+    <br>
+    <label for="genre">Genre:</label>
+    <input type="text" id="genre" name="genre" th:field="*{genre}" required>
+    <br>
+    <label for="isBorrowed">Is Borrowed (0 or 1):</label>
+    <input type="text" id="isBorrowed" name="isBorrowed" th:field="*{isBorrowed}" required>
+    <br>
+    <label for="borrowCount">Borrow Count:</label>
+    <input type="text" id="borrowCount" name="borrowCount" th:field="*{borrowCount}">
+    <br>
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" th:field="*{location}">
+    <br>
+    <button type="submit">Add Book</button>
+</form>
+</body>
+</html>

@@ -68,17 +68,18 @@ public class Book {
     }
 
     // Getter and Setter for isBorrowed
-    public int getIsBorrowed() {
-        return is_borrowed;
+    public Integer getIsBorrowed() {
+        return is_borrowed != null ? is_borrowed : 0; // null이면 0을 반환
     }
+
 
     public void setIsBorrowed(Integer isBorrowed) {
         this.is_borrowed = is_borrowed;
     }
 
     // Getter and Setter for borrowCount
-    public int getBorrowCount() {
-        return borrow_count;
+    public Integer getBorrowCount() {
+        return borrow_count != null ? borrow_count : 0; // null이면 0을 반환
     }
 
     public void setBorrowCount(Integer borrowCount) {

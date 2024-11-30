@@ -1,13 +1,16 @@
 package bookDB.demo.Repository;
 
 import bookDB.demo.Domain.Book;
+import bookDB.demo.Domain.Borrow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +23,12 @@ public class jdbcBookRepository implements BookRepository {
     private static final Logger logger = LoggerFactory.getLogger(jdbcBookRepository.class);
 
     private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public jdbcBookRepository(DataSource dataSource) {
+    public jdbcBookRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -73,4 +78,58 @@ public class jdbcBookRepository implements BookRepository {
             }
         }
     }
+
+    @Override
+    public Book addBook(Book book) {
+        String sql = "INSERT INTO Books (isbn, title, author, publisher, genre, is_borrowed, borrow_count, location) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dataSource.getConnection(); // 데이터소스를 통해 연결
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, book.getISBN());
+            pstmt.setString(2, book.getTitle());
+            pstmt.setString(3, book.getAuthor());
+            pstmt.setString(4, book.getPublisher());
+            pstmt.setString(5, book.getGenre());
+            pstmt.setInt(6, book.getIsBorrowed()); // 초기값: 0
+            pstmt.setInt(7, book.getBorrowCount()); // 초기값: 0
+            pstmt.setString(8, book.getLocation());
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected == 1) {
+                return book; // 삽입 성공
+            } else {
+                throw new SQLException("Book insertion failed");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to add book", e);
+        } finally {
+            close(conn, pstmt, null); // 리소스 정리
+        }
+    }
+
+    @Override
+    public void deleteById(String isbn) {
+        String sql = "DELETE FROM Books WHERE ISBN = ?";  // ISBN을 기준으로 삭제
+        int rowsAffected = jdbcTemplate.update(sql, isbn); // SQL 실행
+        if (rowsAffected > 0) {
+            System.out.println("Book with ISBN " + isbn + " was deleted successfully.");
+        } else {
+            System.out.println("No book found with ISBN " + isbn);
+        }
+    }
+
+    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+        try {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

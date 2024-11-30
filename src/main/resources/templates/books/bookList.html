@@ -6,18 +6,25 @@
         <table>
             <thead>
             <tr>
-                <th>ISBN</th>  <th>제목</th>  <th>작가</th>
-                <!--        <th>등급</th>  <th>Job</th>  <th>적립금</th>-->
+                <th>ISBN</th>  <th>제목</th>  <th>작가</th> <th>출판사</th> <th>삭제</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="book : ${books}">
-                <td> <a th:href="@{|/selectOne?id=${book.ISBN}|}" th:text="${book.ISBN}"></a> </td>
+                <td>
+                    <a th:href="@{|/selectOne?id=${book.ISBN}|}" th:text="${book.ISBN}"></a>
+                </td>
                 <td th:text="${book.title}"></td>
                 <td th:text="${book.author}"></td>
-                <!--        <td th:text="${customer.levels}"></td>-->
-                <!--        <td th:text="${customer.job}"></td>        -->
-                <!--        <td th:text="${customer.point}"></td>-->
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.genre}"></td>
+                <!-- 삭제 버튼 -->
+                <td>
+                    <form action="/books/delete" method="post">
+                        <input type="hidden" name="isbn" th:value="${book.ISBN}"/>
+                        <button type="submit">삭제</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

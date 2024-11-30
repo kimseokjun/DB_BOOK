@@ -20,4 +20,15 @@ public class BookService {
     public List<Book> findBooks() {
         return bookRepository.findALl();
     }
+
+    public void addBook(Book book) {
+        if (book.getISBN() == null || book.getISBN().isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be null or empty");
+        }
+        bookRepository.addBook(book);
+    }
+
+    public void deleteBook(String isbn) {
+        bookRepository.deleteById(isbn); // ISBN으로 책 삭제
+    }
 }

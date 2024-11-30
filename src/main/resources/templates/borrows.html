@@ -1,0 +1,24 @@
+<table>
+  <thead>
+  <tr>
+    <th>대출번호</th>
+    <th>ISBN</th>
+    <th>회원ID</th>
+    <th>대출 날짜</th>
+    <th>반납 예정일</th>
+    <th>반납일</th>
+    <th>반납상태</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="borrow : ${borrows}">
+    <td th:text="${borrow.borrowId}"></td>         <!-- 대출번호 -->
+    <td th:text="${borrow.isbn}"></td>             <!-- ISBN -->
+    <td th:text="${borrow.memberId}"></td>         <!-- 회원ID -->
+    <td th:text="${borrow.borrowDate}"></td>       <!-- 대출 날짜 -->
+    <td th:text="${borrow.dueDate}"></td>          <!-- 반납 예정일 -->
+    <td th:text="${borrow.returnDate != null ? borrow.returnDate : '미반납'}"></td> <!-- 반납일 -->
+    <td th:text="${borrow.returnStatus}"></td>     <!-- 반납상태 -->
+  </tr>
+  </tbody>
+</table>
