@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장르별 대출수 많은 도서</title>
+</head>
+<body>
+<div class="container">
+    <h1>장르별 대출수 많은 도서 목록</h1>
+
+    <!-- 장르 선택 드롭다운 -->
+    <form action="/books/genre" method="get">
+        <label for="genre">장르 선택:</label>
+        <select id="genre" name="genre" th:value="${selectedGenre}" onchange="this.form.submit()">
+            <option value="" disabled selected>장르 선택</option>
+            <option th:each="genre : ${genres}"
+                    th:value="${genre}"
+                    th:text="${genre}"
+                    th:selected="${genre == selectedGenre}"></option>
+        </select>
+    </form>
+
+    <!-- 도서 목록 -->
+    <table>
+        <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>제목</th>
+            <th>작가</th>
+<!--            <th>대출수</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.ISBN}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+<!--            <td th:text="${book.borrowCount}"></td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

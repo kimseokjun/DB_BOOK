@@ -68,4 +68,28 @@ public class BookController {
         bookService.deleteBook(isbn); // isbn으로 책 삭제
         return "redirect:/books"; // 삭제 후 책 목록으로 리다이렉트
     }
+    // 장르별로 대출수 많은 도서 가져오기
+    @GetMapping("/books/genre")
+    public String showBooksByGenre(@RequestParam(required = false) String genre, Model model) {
+        // 장르 목록 가져오기
+        List<String> genres = bookService.findAllGenres();
+        model.addAttribute("genres", genres);  // 장르 목록을 모델에 추가
+
+        // 선택된 장르를 모델에 추가
+        model.addAttribute("selectedGenre", genre); // 선택된 장르를 모델에 추가
+
+        // 장르 선택에 따라 대출수 많은 도서 가져오기
+        List<Book> books;
+        if (genre == null || genre.isEmpty()) {
+            // 장르가 없으면 모든 도서를 대출수 많고 순으로 가져오기
+            books = bookService.findAllBooksSortedByBorrowCount();
+        } else {
+            // 선택된 장르에 해당하는 도서 대출수 많고 순으로 가져오기
+            books = bookService.findBooksByGenreSortedByBorrowCount(genre);
+        }
+
+        model.addAttribute("books", books);
+        return "books/genreBookList"; // 새로운 HTML 페이지로 이동
+    }
+
 }

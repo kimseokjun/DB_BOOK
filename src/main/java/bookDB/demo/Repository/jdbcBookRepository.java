@@ -122,6 +122,46 @@ public class jdbcBookRepository implements BookRepository {
         }
     }
 
+    @Override
+    public List<Book> findAllByOrderByBorrowCountDesc() {
+        String sql = "SELECT * FROM Books ORDER BY borrow_count DESC"; // 대출 수 많은 순으로 정렬
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Book book = new Book();
+            book.setISBN(rs.getString("ISBN"));
+            book.setTitle(rs.getString("title"));
+            book.setAuthor(rs.getString("author"));
+            book.setPublisher(rs.getString("publisher"));
+            book.setGenre(rs.getString("genre"));
+            book.setIsBorrowed(rs.getInt("is_borrowed"));
+            book.setBorrowCount(rs.getInt("borrow_count"));
+            book.setLocation(rs.getString("location"));
+            return book;
+        });
+    }
+
+    @Override
+    public List<Book> findByGenreOrderByBorrowCountDesc(String genre) {
+        String sql = "SELECT * FROM Books WHERE genre = ? ORDER BY borrow_count DESC"; // 장르별 대출 수 많은 순으로 정렬
+        return jdbcTemplate.query(sql, new Object[]{genre}, (rs, rowNum) -> {
+            Book book = new Book();
+            book.setISBN(rs.getString("ISBN"));
+            book.setTitle(rs.getString("title"));
+            book.setAuthor(rs.getString("author"));
+            book.setPublisher(rs.getString("publisher"));
+            book.setGenre(rs.getString("genre"));
+            book.setIsBorrowed(rs.getInt("is_borrowed"));
+            book.setBorrowCount(rs.getInt("borrow_count"));
+            book.setLocation(rs.getString("location"));
+            return book;
+        });
+    }
+
+    @Override
+    public List<String> findAllGenres() {
+        String sql = "SELECT DISTINCT genre FROM Books"; // 모든 고유 장르 목록 조회
+        return jdbcTemplate.queryForList(sql, String.class); // 장르만 리스트로 반환;
+    }
+
     private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null) rs.close();
