@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -36,4 +38,10 @@ public class BorrowReturnController {
 //        borrowService.returnBorrow(borrowId);
 //        return "redirect:/borrows";
 //    }
+
+    @PostMapping("/books/return")
+    public String returnBook(@RequestParam Long borrowId) {
+        borrowReturnService.returnBook(borrowId);  // 반납 프로시저 실행
+        return "redirect:/books/borrowList";  // 대출 목록 페이지로 리다이렉트
+    }
 }

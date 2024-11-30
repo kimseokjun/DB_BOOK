@@ -4,6 +4,7 @@ import bookDB.demo.Domain.Borrow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -17,11 +18,12 @@ import java.util.List;
 public class borowreturnRepository implements BorrowReturnRepository{
 
     private static final Logger logger = LoggerFactory.getLogger(borowreturnRepository.class);
-
+    private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
 
     @Autowired
-    public borowreturnRepository(DataSource dataSource) {
+    public borowreturnRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.jdbcTemplate = jdbcTemplate;
         this.dataSource = dataSource;
     }
 
@@ -72,5 +74,11 @@ public class borowreturnRepository implements BorrowReturnRepository{
                 logger.error("Error closing resources", e);
             }
         }
+    }
+
+    @Override
+    public void returnBook(Long borrowId) {
+        String sql = "{call RETURN_BOOK(?)}";  // 저장 프로시저 호출
+        jdbcTemplate.update(sql, borrowId);  // 대출번호를 인자로 전달
     }
 }
