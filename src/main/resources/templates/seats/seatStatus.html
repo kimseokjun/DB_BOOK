@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌석 상태</title>
+</head>
+<body>
+<div>
+    <h1>좌석 상태 조회 결과</h1>
+    <div th:if="${seatStatus != null}">
+        <p>좌석 번호: <span th:text="${seatStatus.seatId}"></span></p>
+        <p>사용 현황: <span th:text="${seatStatus.status}"></span></p>
+        <p>사용 회원: <span th:text="${seatStatus.maskedName != null ? seatStatus.maskedName : '없음'}"></span></p>
+    </div>
+    <div th:if="${seatStatus == null}">
+        <p>좌석 정보를 찾을 수 없습니다.</p>
+    </div>
+    <a href="/seats">뒤로 가기</a>
+</div>
+</body>
+</html>

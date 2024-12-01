@@ -24,3 +24,5 @@ public interface BookRepository {
     @Query("SELECT DISTINCT b.genre FROM Book b")
     List<String> findAllGenres();
 }
+
+

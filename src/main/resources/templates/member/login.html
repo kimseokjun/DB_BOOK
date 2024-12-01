@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 관리 시스템</title>
+    <title>로그인</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,41 +16,48 @@
             height: 100vh;
         }
 
-        .container {
+        .login-container {
             text-align: center;
             background-color: #fff;
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
+            max-width: 400px;
             width: 100%;
         }
 
-        .container h1 {
-            font-size: 32px;
+        .login-container h1 {
+            font-size: 28px;
             margin-bottom: 20px;
             color: #343a40;
         }
 
-        .button-group {
+        .login-container form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        .button-group a {
-            display: inline-block;
-            padding: 12px 20px;
+        .login-container input {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .login-container button {
+            padding: 12px;
             background-color: #007bff;
             color: white;
-            text-decoration: none;
+            border: none;
             border-radius: 5px;
             font-size: 18px;
             font-weight: bold;
+            cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .button-group a:hover {
+        .login-container button:hover {
             background-color: #0056b3;
         }
 
@@ -62,19 +69,16 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>도서 관리 시스템</h1>
-    <div class="button-group">
-        <!-- 각 기능별 버튼 -->
-        <a href="/books">도서 목록 보기</a>
-        <a href="/books/genre">장르별 도서 보기</a>
-        <a href="/borrows">대출 목록 보기</a>
-        <a href="/books/add">도서 추가하기</a>
-<!--        <a href="/members/add">회원 가입</a>-->
-<!--        <a href="/members/list">회원 목록 보기</a>-->
-<!--        <a href="/seats">좌석 현황 보기</a> -->
+<div class="login-container">
+    <h1>로그인</h1>
+    <form action="/login" method="post">
+        <input type="text" name="username" placeholder="아이디" required>
+        <input type="password" name="password" placeholder="비밀번호" required>
+        <button type="submit">로그인</button>
+    </form>
+    <div class="footer">
+        아직 회원이 아니신가요? <a href="/register">회원가입</a>
     </div>
-    <div class="footer">© 2024 도서 관리 시스템</div>
 </div>
 </body>
 </html>

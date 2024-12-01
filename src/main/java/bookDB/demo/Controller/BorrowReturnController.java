@@ -32,12 +32,6 @@ public class BorrowReturnController {
         return "borrows"; // templates/borrows.html
     }
 
-//    // 반납 처리
-//    @PostMapping("/return")
-//    public String returnBorrow(@RequestParam("borrowId") Long borrowId) {
-//        borrowService.returnBorrow(borrowId);
-//        return "redirect:/borrows";
-//    }
 
     @PostMapping("/books/return")
     public String returnBook(@RequestParam Long borrowId) {
