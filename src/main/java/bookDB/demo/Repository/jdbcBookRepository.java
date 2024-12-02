@@ -1,7 +1,6 @@
 package bookDB.demo.Repository;
 
 import bookDB.demo.Domain.Book;
-import bookDB.demo.Domain.Borrow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -113,6 +112,7 @@ public class jdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(String isbn) {
+        System.out.println(isbn);
         String sql = "DELETE FROM Books WHERE ISBN = ?";  // ISBN을 기준으로 삭제
         int rowsAffected = jdbcTemplate.update(sql, isbn); // SQL 실행
         if (rowsAffected > 0) {

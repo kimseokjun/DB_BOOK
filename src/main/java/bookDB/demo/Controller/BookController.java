@@ -65,6 +65,7 @@ public class BookController {
     // 책 삭제 처리 메서드
     @PostMapping("/books/delete")
     public String deleteBook(@RequestParam String isbn) {
+        System.out.println("컨트롤러입니다. 도서 삭제");
         bookService.deleteBook(isbn); // isbn으로 책 삭제
         return "redirect:/books"; // 삭제 후 책 목록으로 리다이렉트
     }

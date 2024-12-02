@@ -3,6 +3,7 @@ package bookDB.demo.Service;
 import bookDB.demo.Domain.Book;
 import bookDB.demo.Repository.BookRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
+    @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -29,6 +31,7 @@ public class BookService {
     }
 
     public void deleteBook(String isbn) {
+        System.out.println("Service received ISBN: " + isbn); // 로그 추가
         bookRepository.deleteById(isbn); // ISBN으로 책 삭제
     }
 
