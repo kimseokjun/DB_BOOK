@@ -70,6 +70,7 @@
         <tr>
             <th>좌석 번호</th>
             <th>사용 현황</th>
+            <th>예약</th>
             <th>조회</th>
         </tr>
         </thead>
@@ -77,6 +78,13 @@
         <tr th:each="seat : ${seats}">
             <td th:text="${seat.seatId}"></td> <!-- 좌석 번호 -->
             <td th:text="${seat.status}"></td> <!-- 사용 현황 -->
+            <td>
+                <!-- 예약 버튼 -->
+                <form th:action="@{/seats/reserve}" method="post">
+                    <input type="hidden" name="seatId" th:value="${seat.seatId}">
+                    <button type="submit">예약</button>
+                </form>
+            </td>
             <td>
                 <form action="/seats/checkStatus" method="post">
                     <input type="hidden" name="seatId" th:value="${seat.seatId}"/>

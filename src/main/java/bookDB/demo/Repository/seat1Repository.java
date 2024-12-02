@@ -3,10 +3,15 @@ package bookDB.demo.Repository;
 import bookDB.demo.Domain.Seat;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class seat1Repository implements SeatRepository{
@@ -50,5 +55,25 @@ public class seat1Repository implements SeatRepository{
             seat.setMaskedName(maskedName);
             return seat;
         });
+    }
+
+    @Override
+    public int reserveSeat(Integer memberId, Integer seatId) {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("SEAT_RESERVATION")
+                .declareParameters(
+                        new SqlParameter("R_MEMBER_ID", Types.INTEGER),
+                        new SqlParameter("R_SEAT_ID", Types.INTEGER),
+                        new SqlOutParameter("RESERVATION_RESULT", Types.INTEGER)
+                );
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("R_MEMBER_ID", memberId);
+        params.put("R_SEAT_ID", seatId);
+
+        Map<String, Object> result = jdbcCall.execute(params);
+
+        return (int) result.get("RESERVATION_RESULT");
+
     }
 }

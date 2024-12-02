@@ -26,4 +26,8 @@ public class SeatService {
     public Seat getSeatStatus(Long seatId) {
         return seatRepository.checkSeatStatus(seatId);
     }
+    // 좌석 예약
+    public int reserveSeat(Integer memberId, Integer seatId) {
+        return seatRepository.reserveSeat(memberId, seatId);
+    }
 }

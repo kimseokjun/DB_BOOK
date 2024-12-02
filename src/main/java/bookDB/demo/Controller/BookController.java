@@ -3,6 +3,7 @@ package bookDB.demo.Controller;
 
 import bookDB.demo.Domain.Book;
 import bookDB.demo.Service.BookService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,12 +24,15 @@ public class BookController {
         this.bookService = bookService;
     }
 
+
     @GetMapping("/home")
-    public String home() {
-        return "home";
+    public String index(HttpSession session, Model model) {
+        Integer loggedInUser = (Integer) session.getAttribute("loggedInUser");
+        model.addAttribute("loggedInUser", loggedInUser); // 로그인된 사용자 ID를 모델에 추가
+        System.out.println(loggedInUser);
+
+        return "home"; // 메인 페이지로 이동
     }
-
-
 
     @GetMapping("/books")
     public String list(Model model){
