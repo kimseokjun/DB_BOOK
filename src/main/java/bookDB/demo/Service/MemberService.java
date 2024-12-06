@@ -1,6 +1,7 @@
 package bookDB.demo.Service;
 
 
+import bookDB.demo.Domain.Member;
 import bookDB.demo.Repository.MemberRepopsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,13 @@ public class MemberService {
 
     public boolean authenticate(int memberId, String password) {
         // 데이터베이스에서 ID와 비밀번호 확인
-        System.out.println(memberId) ;
+
         return memberRepository.findByIdAndPassword(memberId, password);
     }
-
+    public void registerMember(Member member) {
+        if (memberRepository.existsById(member.getMemberId())) {
+            throw new IllegalArgumentException("이미 존재하는 회원 ID입니다.");
+        }
+        memberRepository.saveMember(member);
+    }
 }

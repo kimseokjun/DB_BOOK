@@ -1,14 +1,13 @@
 package bookDB.demo.Controller;
 
+import bookDB.demo.Domain.Member;
 import bookDB.demo.Service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 @Controller
 @RequestMapping("/auth")
 public class MemberController {
@@ -23,7 +22,22 @@ public class MemberController {
     public String loginPage() {
         return "member/login"; // 로그인 폼 렌더링
     }
-
+    @GetMapping("/register")
+    public String registerpage() {
+        return "member/register"; // 로그인 폼 렌더링
+    }
+    @PostMapping("/register")
+    public String registerMember(@ModelAttribute Member form) {
+        Member member = new Member();
+        member.setMemberId(form.getMemberId());
+        member.setPassword(form.getPassword());
+        member.setMemberName(form.getMemberName());
+        member.setEmail(form.getEmail());
+        member.setGender(form.getGender());
+        System.out.println(member);
+        memberService.registerMember(member);
+        return "redirect:/";
+    }
     @PostMapping("/login")
     public String login(@RequestParam("memberId") int memberId,
                         @RequestParam("password") String password,
