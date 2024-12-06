@@ -6,10 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,6 +149,7 @@ public class jdbcBookRepository implements BookRepository {
             book.setIsBorrowed(rs.getInt("is_borrowed"));
             book.setBorrowCount(rs.getInt("borrow_count"));
             book.setLocation(rs.getString("location"));
+            System.out.println(book.getBorrowCount());
             return book;
         });
     }
@@ -160,6 +158,32 @@ public class jdbcBookRepository implements BookRepository {
     public List<String> findAllGenres() {
         String sql = "SELECT DISTINCT genre FROM Books"; // 모든 고유 장르 목록 조회
         return jdbcTemplate.queryForList(sql, String.class); // 장르만 리스트로 반환;
+    }
+
+    @Override
+    public List<Book> findAvailableBooks() {
+        String sql = "SELECT * FROM Books WHERE is_borrowed = 0";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Book book = new Book();
+            book.setISBN(rs.getString("ISBN"));
+            book.setTitle(rs.getString("title"));
+            book.setAuthor(rs.getString("author"));
+            book.setPublisher(rs.getString("publisher"));
+            book.setGenre(rs.getString("genre"));
+            return book;
+        });
+    }
+
+    @Override
+    public String executeBorrowProcedure(int memberId, String isbn) {
+        String sql = "{call BORROW_BOOK(?, ?, ?)}";
+        return jdbcTemplate.execute(sql, (CallableStatement cs) -> {
+            cs.setInt(1, memberId);
+            cs.setString(2, isbn);
+            cs.registerOutParameter(3, Types.VARCHAR);
+            cs.execute();
+            return cs.getString(3); // 결과 메시지 반환
+        });
     }
 
     private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {

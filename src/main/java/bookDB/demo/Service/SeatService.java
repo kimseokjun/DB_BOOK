@@ -1,6 +1,7 @@
 package bookDB.demo.Service;
 
 import bookDB.demo.Domain.Seat;
+import bookDB.demo.Domain.SeatReservation;
 import bookDB.demo.Repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,17 @@ public class SeatService {
     }
     // 좌석 예약
     public int reserveSeat(Integer memberId, Integer seatId) {
+
         return seatRepository.reserveSeat(memberId, seatId);
+    }
+
+    public List<SeatReservation> getReservationsByMemberId(Integer memberId) {
+        return seatRepository.findReservationsByMemberId(memberId);
+
+
+    }
+
+    public void cancelReservation(int reservationId) {
+        seatRepository.deleteReservation(reservationId);
     }
 }

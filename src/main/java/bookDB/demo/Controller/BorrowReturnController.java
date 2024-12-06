@@ -2,7 +2,9 @@ package bookDB.demo.Controller;
 
 
 import bookDB.demo.Domain.Borrow;
+import bookDB.demo.Domain.SeatReservation;
 import bookDB.demo.Service.BorrowReturnService;
+import bookDB.demo.Service.SeatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -20,9 +22,11 @@ public class BorrowReturnController {
 
     @Autowired
     private final BorrowReturnService borrowReturnService;
+    private final SeatService seatService;
 
-    public BorrowReturnController(BorrowReturnService borrowReturnService) {
+    public BorrowReturnController(BorrowReturnService borrowReturnService, SeatService seatService) {
         this.borrowReturnService = borrowReturnService;
+        this.seatService = seatService;
     }
 
         // 대출 기록 목록 페이지
@@ -35,28 +39,43 @@ public class BorrowReturnController {
         return "borrows"; // templates/borrows.html
     }
 
-//    @PostMapping("/login")
-//    public String login(@RequestParam("memberId") String memberId,
-//                        @RequestParam("password") String password,
-//                        HttpServletRequest request) {
-//
-//        // 예시: 사용자 인증 (여기에 실제 인증 로직 추가)
-//        if ("user".equals(memberId) && "1234".equals(password)) {
-//            // 인증 성공 시 세션에 사용자 정보 저장
-//            HttpSession session = request.getSession();
-//            session.setAttribute("loggedInUser", memberId);
-//
-//            return "redirect:/home";
-//        }
-//
-//        // 인증 실패 시 다시 로그인 페이지로
-//        return "redirect:/login?error";
-//    }
+    @GetMapping("/my-records")
+    public String viewMyRecords(HttpSession session, Model model) {
+        Integer loggedInUser = (Integer) session.getAttribute("loggedInUser");
+
+        if (loggedInUser != null) {
+            List<Borrow> borrows = borrowReturnService.getBorrowRecordsForMember(loggedInUser);
+            List<SeatReservation> reservations = seatService.getReservationsByMemberId(loggedInUser);
+
+            model.addAttribute("borrows", borrows);
+            model.addAttribute("reservations", reservations);
+
+        } else {
+            model.addAttribute("error", "로그인이 필요합니다.");
+        }
+
+        return "myRecords";
+    }
 
 
     @PostMapping("/books/return")
     public String returnBook(@RequestParam Long borrowId) {
         borrowReturnService.returnBook(borrowId);  // 반납 프로시저 실행
-        return "redirect:/books/borrowList";  // 대출 목록 페이지로 리다이렉트
+        return "redirect:/my-records";  // 대출 목록 페이지로 리다이렉트
+    }
+
+    @PostMapping("/borrows/extend")
+    public String extendBorrow(@RequestParam("borrowId") int borrowId, Model model) {
+        try {
+            // 연장 프로시저 실행
+            borrowReturnService.extendBorrow(borrowId);
+            model.addAttribute("message", "대출이 성공적으로 연장되었습니다.");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            System.out.println(e.getMessage());
+        }
+
+        // 연장 후 대출 기록 페이지로 리다이렉트
+        return "redirect:/my-records";
     }
 }

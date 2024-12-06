@@ -23,6 +23,12 @@ public interface BookRepository {
     // 모든 장르 목록 조회
     @Query("SELECT DISTINCT b.genre FROM Book b")
     List<String> findAllGenres();
+
+    //대출 가능 도서 목록 조회
+    public List<Book> findAvailableBooks();
+
+    //대출 프로시저 호출
+    public String executeBorrowProcedure(int memberId, String isbn);
 }
 
 

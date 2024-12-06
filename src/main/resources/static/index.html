@@ -1,87 +1,110 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리 시스템</title>
     <style>
+        /* 기본 스타일 */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: #fff;
         }
 
         .container {
             text-align: center;
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             max-width: 600px;
             width: 100%;
         }
 
-        .container h1 {
-            font-size: 32px;
+        h1 {
+            font-size: 36px;
             margin-bottom: 20px;
-            color: #343a40;
+            color: #333;
+        }
+
+        .login-user {
+            text-align: right;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
         }
 
         .button-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .button-group a {
-            display: inline-block;
-            padding: 12px 20px;
-            background-color: #007bff;
-            color: white;
+            display: block;
+            padding: 14px;
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+            color: #fff;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 18px;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, background 0.3s;
         }
 
         .button-group a:hover {
-            background-color: #0056b3;
+            transform: translateY(-3px);
+            background: linear-gradient(45deg, #feb47b, #ff7e5f);
         }
 
         .footer {
             margin-top: 20px;
             font-size: 14px;
-            color: #868e96;
+            color: #777;
         }
 
-        .login-user {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 16px;
-            color: #343a40;
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .button-group a {
+                font-size: 16px;
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>도서 관리 시스템</h1>
+    <h1>📚 도서 관리 시스템</h1>
+    <div class="login-user">
+        <span th:if="${loggedInUser != null}" th:text="'안녕하세요, ' + ${loggedInUser} + '님!'"></span>
+        <span th:if="${loggedInUser == null}">로그인 해주세요.</span>
+    </div>
     <div class="button-group">
         <!-- 각 기능별 버튼 -->
-        <a href="/auth/login">로그인</a>
-        <a href="/books">도서 목록 보기</a>
-        <a href="/books/genre">장르별 도서 보기</a>
-        <a href="/borrows">대출 목록 보기</a>
-        <a href="/books/add">도서 추가하기</a>
-        <a href="/seats">좌석 현황 보기</a>
+        <a href="/auth/login">🔑 로그인</a>
+        <a href="/books">📖 도서 목록 보기</a>
+        <a href="/books/genre">📂 장르별 도서</a>
+        <a href="/books/available">✅ 대출 가능 도서</a>
+        <a href="/my-records">📝 나의 대출,좌석 목록</a>
+        <a href="/borrows">📋 전체 대출 목록</a>
+        <a href="/books/add">➕ 도서 추가</a>
+        <a href="/seats">💺 좌석 현황</a>
+        <a href="/bookrequest">📨 도서 신청</a>
+        <a href="/statistics">📨 대출 통계</a>
     </div>
-    <div class="footer">© 2024 도서 관리 시스템</div>
+    <div class="footer">© 2024 도서 관리 시스템 | 모든 권리 보유</div>
 </div>
 </body>
 </html>

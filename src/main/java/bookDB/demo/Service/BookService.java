@@ -31,7 +31,7 @@ public class BookService {
     }
 
     public void deleteBook(String isbn) {
-        System.out.println("Service received ISBN: " + isbn); // 로그 추가
+
         bookRepository.deleteById(isbn); // ISBN으로 책 삭제
     }
 
@@ -48,5 +48,14 @@ public class BookService {
     // 모든 장르 목록 가져오기
     public List<String> findAllGenres() {
         return bookRepository.findAllGenres(); // 책 테이블에서 모든 장르를 가져옴
+    }
+    // 대출 가능한 도서 목록 가져오기
+    public List<Book> getAvailableBooks() {
+        return bookRepository.findAvailableBooks();
+    }
+
+    //대출 기능
+    public String borrowBook(int memberId, String isbn) {
+        return bookRepository.executeBorrowProcedure(memberId, isbn);
     }
 }

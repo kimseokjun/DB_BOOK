@@ -1,5 +1,110 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대출 목록</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 1000px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #343a40;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    td form {
+        margin: 0;
+    }
+
+    button {
+        padding: 8px 12px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    .footer {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #868e96;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .button-group a {
+        display: inline-block;
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .button-group a:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
 <body>
 <div class="container">
   <h2>대출 목록</h2>
@@ -26,8 +131,10 @@
       <td th:text="${borrow.returnDate != null ? borrow.returnDate : '미반납'}"></td> <!-- 반납일 -->
       <td th:text="${borrow.returnStatus}"></td>     <!-- 반납상태 -->
       <td>
-        <!-- 반납 버튼: 대출번호를 POST로 전송 -->
-        <form action="/books/return" method="post">
+        <!-- 반납 상태가 "반납" 또는 "연체 반납"이 아닌 경우에만 버튼 표시 -->
+        <form th:if="${borrow.returnStatus != '반납' && borrow.returnStatus != '연체 반납'}"
+              action="/books/return"
+              method="post">
           <input type="hidden" name="borrowId" th:value="${borrow.borrowId}" />
           <button type="submit">반납</button>
         </form>
@@ -35,6 +142,14 @@
     </tr>
     </tbody>
   </table>
+
+  <div class="button-group">
+    <a href="/home">홈으로</a>
+  </div>
+
+  <div class="footer">
+    <p>© 2024 도서 관리 시스템</p>
+  </div>
 </div>
 </body>
 </html>

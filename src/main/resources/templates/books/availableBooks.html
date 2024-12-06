@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 대출 시스템</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<h1>도서 대출 시스템</h1>
+
+<!-- 메시지 표시 -->
+<div th:if="${message}" th:classappend="${message.contains('성공') ? 'success message' : 'error message'}" th:text="${message}">
+    <!-- 메시지가 화면에 출력됩니다 -->
+</div>
+
+<!-- 대여 가능한 책 목록 -->
+<h2>대여 가능한 책</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ISBN</th>
+        <th>제목</th>
+        <th>작가</th>
+        <th>출판사</th>
+        <th>장르</th>
+        <th>대출</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${availableBooks}">
+        <td th:text="${book.ISBN}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.publisher}"></td>
+        <td th:text="${book.genre}"></td>
+        <td>
+            <form th:action="@{/books/borrow}" method="post">
+                <input type="hidden" name="isbn" th:value="${book.ISBN}">
+                <button type="submit">대출</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/home">홈으로</a>
+</body>
+</html>

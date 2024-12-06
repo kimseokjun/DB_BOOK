@@ -8,5 +8,9 @@ public interface BorrowReturnRepository {
 
     public List<Borrow> findAllBorrows();
 
-   public void returnBook(Long borrowId);
+    public void returnBook(Long borrowId);
+
+    public List<Borrow> findByMemberId(int memberId);
+
+    public void extendBorrow(int borrowId);
 }

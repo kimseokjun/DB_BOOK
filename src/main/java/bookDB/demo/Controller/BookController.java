@@ -29,7 +29,7 @@ public class BookController {
     public String index(HttpSession session, Model model) {
         Integer loggedInUser = (Integer) session.getAttribute("loggedInUser");
         model.addAttribute("loggedInUser", loggedInUser); // 로그인된 사용자 ID를 모델에 추가
-        System.out.println(loggedInUser);
+
 
         return "home"; // 메인 페이지로 이동
     }
@@ -37,7 +37,7 @@ public class BookController {
     @GetMapping("/books")
     public String list(Model model){
         List<Book> books = bookService.findBooks();
-        System.out.println("Total books : "+ books.size());
+       ;
         model.addAttribute("books",books);
         return "books/bookList";
     }
@@ -69,7 +69,7 @@ public class BookController {
     // 책 삭제 처리 메서드
     @PostMapping("/books/delete")
     public String deleteBook(@RequestParam String isbn) {
-        System.out.println("컨트롤러입니다. 도서 삭제");
+
         bookService.deleteBook(isbn); // isbn으로 책 삭제
         return "redirect:/books"; // 삭제 후 책 목록으로 리다이렉트
     }
@@ -95,6 +95,27 @@ public class BookController {
 
         model.addAttribute("books", books);
         return "books/genreBookList"; // 새로운 HTML 페이지로 이동
+    }
+    @GetMapping("/books/available")
+    public String showAvailableBooks(Model model) {
+        List<Book> availableBooks = bookService.getAvailableBooks();
+        model.addAttribute("availableBooks", availableBooks);
+        return "books/availableBooks"; // HTML 파일 이름
+    }
+
+
+    @PostMapping("/books/borrow")
+    public String borrowBook(@RequestParam("isbn") String isbn, HttpSession session, Model model) {
+        Integer loggedInUser = (Integer) session.getAttribute("loggedInUser");
+
+        if (loggedInUser == null) {
+            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로 이동
+        }
+
+        String result = bookService.borrowBook(loggedInUser, isbn); // 대출 서비스 호출
+        model.addAttribute("message", result);
+        System.out.println(result);
+        return "books/availableBooks"; // 대여 가능한 책 목록으로 이동 이동
     }
 
 }

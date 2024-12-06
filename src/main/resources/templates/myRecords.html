@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 대출 및 좌석 예약 기록</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-return {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .button-return:hover {
+      background-color: #218838;
+    }
+
+    .button-extend {
+      background-color: #ffc107;
+      color: white;
+    }
+
+    .button-extend:hover {
+      background-color: #e0a800;
+    }
+  .button-cancel {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .button-cancel:hover {
+    background-color: #c82333;
+  }
+    .home-link {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .home-link:hover {
+      text-decoration: underline;
+    }
+
+    .container-reservation {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>내 대출 기록</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>대출번호</th>
+      <th>ISBN</th>
+      <th>대출 날짜</th>
+      <th>반납 예정일</th>
+      <th>반납일</th>
+      <th>반납 상태</th>
+      <th>반납</th>
+      <th>연장</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="borrow : ${borrows}">
+      <td th:text="${borrow.borrowId}"></td>
+      <td th:text="${borrow.isbn}"></td>
+      <td th:text="${borrow.borrowDate}"></td>
+      <td th:text="${borrow.dueDate}"></td>
+      <td th:text="${borrow.returnDate != null ? borrow.returnDate : '미반납'}"></td>
+      <td th:text="${borrow.returnStatus}"></td>
+      <td>
+        <form th:action="@{/books/return}" method="post" th:if="${borrow.returnDate == null}">
+          <input type="hidden" name="borrowId" th:value="${borrow.borrowId}" />
+          <button type="submit" class="button button-return">반납</button>
+        </form>
+      </td>
+      <td>
+        <form action="/borrows/extend" method="post" th:if="${borrow.isExtended == 0}">
+          <input type="hidden" name="borrowId" th:value="${borrow.borrowId}" />
+          <button type="submit" class="button button-extend">연장</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="container-reservation">
+    <h2>좌석 예약 현황</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>예약번호</th>
+        <th>좌석번호</th>
+        <th>예약시간</th>
+        <th>좌석 상태</th>
+        <th>취소</th> <!-- 취소 버튼 열 추가 -->
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.reservationId}"></td>
+        <td th:text="${reservation.seatId}"></td>
+        <td th:text="${reservation.reservationTime}"></td>
+        <td th:text="${reservation.seatStatus}"></td>
+        <td>
+          <!-- 예약 취소 버튼 -->
+          <form th:action="@{/seats/cancel}" method="post">
+            <input type="hidden" name="reservationId" th:value="${reservation.reservationId}" />
+            <button type="submit" class="button button-cancel">취소</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="/home" class="home-link">홈으로 돌아가기</a>
+</div>
+</body>
+</html>

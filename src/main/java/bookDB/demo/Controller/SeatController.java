@@ -2,6 +2,7 @@ package bookDB.demo.Controller;
 
 import bookDB.demo.Domain.Seat;
 import bookDB.demo.Service.SeatService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,11 +41,18 @@ public class SeatController {
         return "seats/seatStatus"; // templates/seatStatus.html 렌더링
     }
 
-    // 좌석 예약 처리
     @PostMapping("/reserve")
-    public String reserveSeat(@RequestParam("seatId") Integer seatId) {
-        Integer memberId = 3; // 임시로 설정된 회원 ID, 로그인 기능 추가 시 수정 필요
-        int result = seatService.reserveSeat(memberId, seatId);
+    public String reserveSeat(@RequestParam("seatId") Integer seatId, HttpSession session) {
+
+        // 세션에서 로그인한 사용자 정보 가져오기
+        Integer loggedInUser = (Integer) session.getAttribute("loggedInUser");
+
+        if (loggedInUser == null) {
+            // 로그인되지 않은 경우 처리
+            return "redirect:/auth/login";  // 로그인 페이지로 리다이렉트
+        }
+        // 좌석 예약 처리
+        int result = seatService.reserveSeat(loggedInUser, seatId);
 
         if (result == 1) {
             System.out.println("예약 성공: 좌석 " + seatId + "이(가) 예약되었습니다.");
@@ -56,4 +64,16 @@ public class SeatController {
 
         return "redirect:/seats"; // 예약 후 좌석 목록으로 리다이렉트
     }
+    @PostMapping("/cancel")
+    public String cancelReservation(@RequestParam("reservationId") int reservationId, Model model) {
+        try {
+            seatService.cancelReservation(reservationId);
+            model.addAttribute("message", "예약이 성공적으로 취소되었습니다.");
+        } catch (Exception e) {
+            model.addAttribute("error", "예약 취소 중 오류가 발생했습니다: " + e.getMessage());
+        }
+        return "redirect:/my-records"; // 예약 취소 후 다시 내 대출 기록 페이지로 리다이렉트
+    }
+
+
 }

@@ -22,11 +22,16 @@ public class BorrowReturnService {
 
 
     public List<Borrow> getAllBorrows(){
-        System.out.println("----------------------서비스-----------------------");
         return borrowReturnRepository.findAllBorrows();
     }
 
     public void returnBook(Long borrowId) {
         borrowReturnRepository.returnBook(borrowId);  // 저장 프로시저 실행
+    }
+    public List<Borrow> getBorrowRecordsForMember(int memberId) {
+        return borrowReturnRepository.findByMemberId(memberId);
+    }
+    public void extendBorrow(int borrowId) {
+        borrowReturnRepository.extendBorrow(borrowId);
     }
 }

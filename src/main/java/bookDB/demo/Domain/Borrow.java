@@ -9,13 +9,14 @@ import java.time.LocalDate;
 public class Borrow {
 
     @Id
-     Integer borrowId;  // Long -> Integer로 변경
-     String isbn;
-     Integer memberId;  // Long -> Integer로 변경
-     LocalDate borrowDate;
-     LocalDate dueDate;
-     LocalDate returnDate;
-     String returnStatus;
+    private Integer borrowId;
+    private String isbn;
+    private Integer memberId;
+    private LocalDate borrowDate;
+    private LocalDate dueDate;
+    private LocalDate returnDate;
+    private String returnStatus;
+    private Integer isExtended; // 연장 여부 추가
 
     // Getters and Setters
     public Integer getBorrowId() {
@@ -74,16 +75,11 @@ public class Borrow {
         this.returnStatus = returnStatus;
     }
 
-    @Override
-    public String toString() {
-        return "Borrow{" +
-                "borrowId=" + borrowId +
-                ", isbn='" + isbn + '\'' +
-                ", memberId=" + memberId +
-                ", borrowDate=" + borrowDate +
-                ", dueDate=" + dueDate +
-                ", returnDate=" + returnDate +
-                ", returnStatus='" + returnStatus + '\'' +
-                '}';
+    public Integer getIsExtended() { // Getter for isExtended
+        return isExtended;
+    }
+
+    public void setIsExtended(Integer isExtended) { // Setter for isExtended
+        this.isExtended = isExtended;
     }
 }
