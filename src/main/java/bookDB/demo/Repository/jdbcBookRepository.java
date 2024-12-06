@@ -30,80 +30,44 @@ public class jdbcBookRepository implements BookRepository {
     @Override
     public List<Book> findALl() {
         String sql = "SELECT * FROM BOOKS";
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
 
-        try {
-            conn = dataSource.getConnection();
-            logger.info("Database connection established"); // Connection 확인
-            pstmt = conn.prepareStatement(sql);
-            logger.info("PreparedStatement created"); // PreparedStatement 확인
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Book book = new Book();
+            book.setISBN(rs.getString("ISBN"));
+            book.setTitle(rs.getString("title"));
+            book.setAuthor(rs.getString("author"));
+            book.setPublisher(rs.getString("publisher"));
+            book.setGenre(rs.getString("genre"));
+            book.setIsBorrowed(rs.getInt("is_borrowed"));
+            book.setBorrowCount(rs.getInt("borrow_count"));
+            book.setLocation(rs.getString("location"));
+            // book.setRegistrationDate(rs.getDate("registration_date").toString());
 
-            rs = pstmt.executeQuery();
-            logger.info("Query executed: {}", sql); // Query 실행 확인
-
-            List<Book> books = new ArrayList<>();
-            while (rs.next()) {
-                Book book = new Book();
-                book.setISBN(rs.getString("ISBN"));
-                book.setTitle(rs.getString("title"));
-                book.setAuthor(rs.getString("author"));
-                book.setPublisher(rs.getString("publisher"));
-                book.setGenre(rs.getString("genre"));
-                book.setIsBorrowed(rs.getInt("is_borrowed"));
-                book.setBorrowCount(rs.getInt("borrow_count"));
-                book.setLocation(rs.getString("location"));
-             //   book.setRegistrationDate(rs.getDate("registration_date").toString());
-
-
-                books.add(book);
-                System.out.println("Book added:"+ book); // 데이터 확인
-            }
-            return books;
-        } catch (Exception e) {
-            logger.error("Error fetching books", e); // 예외 로그 출력
-            throw new IllegalStateException(e);
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                logger.error("Error closing resources", e);
-            }
-        }
+            logger.info("Book added: {}", book); // 데이터 확인 로그
+            return book;
+        });
     }
-
     @Override
     public Book addBook(Book book) {
         String sql = "INSERT INTO Books (isbn, title, author, publisher, genre, is_borrowed, borrow_count, location) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dataSource.getConnection(); // 데이터소스를 통해 연결
-            pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, book.getISBN());
-            pstmt.setString(2, book.getTitle());
-            pstmt.setString(3, book.getAuthor());
-            pstmt.setString(4, book.getPublisher());
-            pstmt.setString(5, book.getGenre());
-            pstmt.setInt(6, book.getIsBorrowed()); // 초기값: 0
-            pstmt.setInt(7, book.getBorrowCount()); // 초기값: 0
-            pstmt.setString(8, book.getLocation());
+        int rowsAffected = jdbcTemplate.update(
+                sql,
+                book.getISBN(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getPublisher(),
+                book.getGenre(),
+                book.getIsBorrowed(), // 초기값: 0
+                book.getBorrowCount(), // 초기값: 0
+                book.getLocation()
+        );
 
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected == 1) {
-                return book; // 삽입 성공
-            } else {
-                throw new SQLException("Book insertion failed");
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to add book", e);
-        } finally {
-            close(conn, pstmt, null); // 리소스 정리
+        if (rowsAffected == 1) {
+            return book; // 삽입 성공
+        } else {
+            throw new IllegalStateException("Book insertion failed");
         }
     }
 
