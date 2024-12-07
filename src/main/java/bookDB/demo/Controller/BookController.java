@@ -114,8 +114,14 @@ public class BookController {
 
         String result = bookService.borrowBook(loggedInUser, isbn); // 대출 서비스 호출
         model.addAttribute("message", result);
-        System.out.println(result);
         return "books/availableBooks"; // 대여 가능한 책 목록으로 이동 이동
     }
 
+    //책검색
+    @GetMapping("/books/search")
+    public String searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String genre, Model model) {
+        List<Book> books = bookService.searchBooks(title, genre);
+        model.addAttribute("books", books);
+        return "books/search";
+    }
 }

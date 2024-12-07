@@ -4,6 +4,7 @@ package bookDB.demo.Service;
 import bookDB.demo.Domain.Member;
 import bookDB.demo.Repository.MemberRepopsitory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,4 +28,18 @@ public class MemberService {
         }
         memberRepository.saveMember(member);
     }
+
+
+    public void deleteMember(Integer id) {
+        try {
+            memberRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        }
+    }
+
+    public Member findMemberById(Integer id) {
+        return memberRepository.findById(id);
+    }
+
 }

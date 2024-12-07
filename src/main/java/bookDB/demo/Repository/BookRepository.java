@@ -29,6 +29,9 @@ public interface BookRepository {
 
     //대출 프로시저 호출
     public String executeBorrowProcedure(int memberId, String isbn);
+    
+    //도서 검색
+    List<Book> searchBooks(String title, String genre);
 }
 
 

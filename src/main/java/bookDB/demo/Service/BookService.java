@@ -58,4 +58,8 @@ public class BookService {
     public String borrowBook(int memberId, String isbn) {
         return bookRepository.executeBorrowProcedure(memberId, isbn);
     }
+
+    public List<Book> searchBooks(String title, String genre) {
+        return bookRepository.searchBooks(title, genre);
+    }
 }

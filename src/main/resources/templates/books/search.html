@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 검색</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .button-container a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>도서 검색</h1>
+    <form action="/books/search" method="get">
+        <label for="title">제목:</label>
+        <input type="text" name="title" id="title" placeholder="도서 제목 입력">
+
+        <label for="genre">장르:</label>
+        <select name="genre" id="genre">
+            <option value="">--장르 선택--</option>
+            <option value="aaa">장르</option>
+            <option value="bbb">넣을</option>
+            <option value="ccc">곳</option>
+        </select>
+
+        <button type="submit">검색</button>
+    </form>
+
+    <h2>검색 결과</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>제목</th>
+            <th>저자</th>
+            <th>출판사</th>
+            <th>장르</th>
+            <th>위치</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.ISBN}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.publisher}"></td>
+            <td th:text="${book.genre}"></td>
+            <td th:text="${book.location}"></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(books)}">
+            <td colspan="6">검색 결과가 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="button-group">
+        <a href="/home">홈으로</a>
+    </div>
+</div>
+</body>
+</html>

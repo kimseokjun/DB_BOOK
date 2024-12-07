@@ -18,12 +18,12 @@ public class jdbcBookRepository implements BookRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(jdbcBookRepository.class);
 
-    private final DataSource dataSource;
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public jdbcBookRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.dataSource = dataSource;
+    public jdbcBookRepository(JdbcTemplate jdbcTemplate) {
+
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -73,7 +73,6 @@ public class jdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(String isbn) {
-        System.out.println(isbn);
         String sql = "DELETE FROM Books WHERE ISBN = ?";  // ISBN을 기준으로 삭제
         int rowsAffected = jdbcTemplate.update(sql, isbn); // SQL 실행
         if (rowsAffected > 0) {
@@ -149,7 +148,35 @@ public class jdbcBookRepository implements BookRepository {
             return cs.getString(3); // 결과 메시지 반환
         });
     }
-
+    @Override
+    public List<Book> searchBooks(String title, String genre) {
+        String sql;
+        Object[] params;
+        if ((title != null && !title.isEmpty()) && (genre != null && !genre.isEmpty())) {
+            sql = "SELECT * FROM BOOKS WHERE TITLE LIKE ? AND GENRE = ?";
+            params = new Object[]{"%" + title + "%", genre};
+        } else if (title != null && !title.isEmpty()) {
+            sql = "SELECT * FROM BOOKS WHERE TITLE LIKE ?";
+            params = new Object[]{"%" + title + "%"};
+        } else if (genre != null && !genre.isEmpty()) {
+            sql = "SELECT * FROM BOOKS WHERE GENRE = ?";
+            params = new Object[]{genre};
+        } else {
+            return List.of();
+        }
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Book book = new Book();
+            book.setISBN(rs.getString("ISBN"));
+            book.setTitle(rs.getString("TITLE"));
+            book.setAuthor(rs.getString("AUTHOR"));
+            book.setPublisher(rs.getString("PUBLISHER"));
+            book.setGenre(rs.getString("GENRE"));
+            book.setIsBorrowed(rs.getInt("IS_BORROWED"));
+            book.setBorrowCount(rs.getInt("BORROW_COUNT"));
+            book.setLocation(rs.getString("LOCATION"));
+            return book;
+        });
+    }
     private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null) rs.close();
@@ -158,6 +185,7 @@ public class jdbcBookRepository implements BookRepository {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 }

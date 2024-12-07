@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 탈퇴</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+        text-align: center;
+        color: #dc3545;
+    }
+
+    p {
+        font-size: 18px;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-group a, .button-group button {
+        text-decoration: none;
+        color: #fff;
+        background-color: #007bff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .button-group .cancel {
+        background-color: #6c757d;
+    }
+
+    .button-group .cancel:hover {
+        background-color: #5a6268;
+    }
+
+    .button-group .confirm {
+        background-color: #dc3545;
+    }
+
+    .button-group .confirm:hover {
+        background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>회원 탈퇴</h1>
+  <p>정말로 회원 탈퇴를 하시겠습니까?</p>
+  <div class="error-message" th:if="${error}" th:text="${error}"></div>
+
+  <form action="/auth/deleteAccount" method="post" class="button-group">
+    <button class="cancel" onclick="history.back(); return false;">취소</button>
+    <button type="submit" class="confirm">탈퇴</button>
+  </form>
+</div>
+</body>
+</html>

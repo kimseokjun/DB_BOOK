@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 정보</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .info {
+        margin-bottom: 20px;
+    }
+
+    .info p {
+        font-size: 18px;
+        margin: 8px 0;
+    }
+
+    .home-link {
+        display: inline-block;
+        text-decoration: none;
+        color: #007bff;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .home-link:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>회원 정보</h1>
+  <div class="info">
+    <p><strong>회원 ID:</strong> <span th:text="${member.memberId}"></span></p>
+    <p><strong>이름:</strong> <span th:text="${member.memberName}"></span></p>
+    <p><strong>이메일:</strong> <span th:text="${member.email}"></span></p>
+    <p><strong>성별:</strong> <span th:text="${member.gender}"></span></p>
+    <p><strong>등급:</strong> <span th:text="${member.membershipLevel}"></span></p>
+  </div>
+
+  <div class="button-group">
+    <div>
+      <a href="/auth/logout">로그아웃</a>
+    </div>
+    <div class="delete-button">
+      <a href="/auth/deleteAccount">회원 탈퇴</a>
+    </div>
+  </div>
+  <a href="/home" class="home-link">홈으로 돌아가기</a>
+</div>
+</body>
+</html>

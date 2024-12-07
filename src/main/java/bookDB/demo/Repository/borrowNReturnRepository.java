@@ -19,12 +19,10 @@ public class borrowNReturnRepository implements BorrowReturnRepository{
 
     private static final Logger logger = LoggerFactory.getLogger(borrowNReturnRepository.class);
     private final JdbcTemplate jdbcTemplate;
-    private final DataSource dataSource;
-
     @Autowired
-    public borrowNReturnRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public borrowNReturnRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.dataSource = dataSource;
+
     }
 
     @Override
@@ -46,12 +44,14 @@ public class borrowNReturnRepository implements BorrowReturnRepository{
         });
     }
 
+    //도서 반납 프로시저
     @Override
     public void returnBook(Long borrowId) {
         String sql = "{call RETURN_BOOK(?)}";  // 저장 프로시저 호출
         jdbcTemplate.update(sql, borrowId);  // 대출번호를 인자로 전달
     }
 
+    // 내 대출 목록
     @Override
     public List<Borrow> findByMemberId(int memberId) {
         String sql = "SELECT * FROM Borrow WHERE member_id = ?";
