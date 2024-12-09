@@ -14,15 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Repository
-public class jdbcBookRepository implements BookRepository {
+public class jdbcTemplateBookRepository implements BookRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(jdbcBookRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(jdbcTemplateBookRepository.class);
 
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public jdbcBookRepository(JdbcTemplate jdbcTemplate) {
+    public jdbcTemplateBookRepository(JdbcTemplate jdbcTemplate) {
 
         this.jdbcTemplate = jdbcTemplate;
     }
