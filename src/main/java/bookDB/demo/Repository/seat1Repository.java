@@ -66,25 +66,24 @@ public class seat1Repository implements SeatRepository{
     //죄석 예약
     @Override
     public int reserveSeat(Integer memberId, Integer seatId) {
-        // SQL 호출을 위한 PL/SQL 프로시저 호출
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("SEAT_RESERVATION")
-                .declareParameters(
-                        new SqlParameter("R_MEMBER_ID", Types.INTEGER),  // 1번 파라미터
-                        new SqlParameter("R_SEAT_ID", Types.INTEGER),    // 2번 파라미터
-                        new SqlOutParameter("RESERVATION_RESULT", Types.INTEGER) // 3번 파라미터 (결과 값)
-                );
+        String sql = "{ call SEAT_RESERVATION(?, ?, ?) }"; // 프로시저 호출 쿼리
 
-// 파라미터 설정
-        Map<String, Object> params = new HashMap<>();
-        params.put("R_MEMBER_ID", memberId);
-        params.put("R_SEAT_ID", seatId);
+        return jdbcTemplate.execute(sql, (CallableStatementCallback<Integer>) cs -> {
+            // IN 파라미터 설정
+            cs.setInt(1, memberId);
+            cs.setInt(2, seatId);
 
-// 결과 반환
-        Map<String, Object> result = jdbcCall.execute(params);
-        // 프로시저 실행 후 반환된 값
-        return (int)result.get("RESERVATION_RESULT");
+            // OUT 파라미터 설정
+            cs.registerOutParameter(3, Types.INTEGER);
+
+            // 프로시저 실행
+            cs.execute();
+
+            // OUT 파라미터 값 반환
+            return cs.getInt(3);
+        });
     }
+
 
     // 내 예약현황 조회
     @Override

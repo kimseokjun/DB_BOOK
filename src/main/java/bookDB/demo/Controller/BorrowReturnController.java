@@ -59,7 +59,7 @@ public class BorrowReturnController {
 
 
     @PostMapping("/books/return")
-    public String returnBook(@RequestParam Long borrowId) {
+    public String returnBook(@RequestParam int borrowId) {
         borrowReturnService.returnBook(borrowId);  // 반납 프로시저 실행
         return "redirect:/my-records";  // 대출 목록 페이지로 리다이렉트
     }

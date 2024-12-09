@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,12 +44,27 @@ public class borrowNReturnRepository implements BorrowReturnRepository{
             return borrow;
         });
     }
-
+//     jdbcTemplate.execute((Connection connection) -> {
+//        try (CallableStatement callableStatement = connection.prepareCall(sql)) {
+//            callableStatement.setInt(1, borrowId);
+//            callableStatement.execute();
+//        }
+//        return null; // execute 메서드는 결과가 필요 없으므로 null 반환
+//    });
     //도서 반납 프로시저
     @Override
-    public void returnBook(Long borrowId) {
-        String sql = "{call RETURN_BOOK(?)}";  // 저장 프로시저 호출
-        jdbcTemplate.update(sql, borrowId);  // 대출번호를 인자로 전달
+    public void returnBook(int borrowId) {
+        String sql = "{call RETURN_BOOK(?)}"; // 프로시저 호출 SQL
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(sql)) {
+                // 매개변수 설정
+                callableStatement.setLong(1, borrowId);
+
+                // 프로시저 실행
+                callableStatement.execute();
+                return null; // execute는 결과를 반환하지 않음
+            }
+        });
     }
 
     // 내 대출 목록
@@ -77,6 +93,13 @@ public class borrowNReturnRepository implements BorrowReturnRepository{
     @Override
     public void extendBorrow(int borrowId) {
         String sql = "{ call extend_borrow(?) }";
-        jdbcTemplate.update(sql, borrowId);
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(sql)) {
+                callableStatement.setInt(1, borrowId);
+                callableStatement.execute();
+            }
+            return null; // execute 메서드는 결과가 필요 없으므로 null 반환
+        });
     }
+
 }

@@ -29,7 +29,7 @@ public class BookController {
     public String index(HttpSession session, Model model) {
         Integer loggedInUser = (Integer) session.getAttribute("loggedInUser");
         model.addAttribute("loggedInUser", loggedInUser); // 로그인된 사용자 ID를 모델에 추가
-
+        System.out.println(loggedInUser + " : Home화면 접근");
 
         return "home"; // 메인 페이지로 이동
     }

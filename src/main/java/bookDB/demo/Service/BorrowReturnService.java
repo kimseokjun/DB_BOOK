@@ -25,7 +25,7 @@ public class BorrowReturnService {
         return borrowReturnRepository.findAllBorrows();
     }
 
-    public void returnBook(Long borrowId) {
+    public void returnBook(int borrowId) {
         borrowReturnRepository.returnBook(borrowId);  // 저장 프로시저 실행
     }
     public List<Borrow> getBorrowRecordsForMember(int memberId) {

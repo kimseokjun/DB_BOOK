@@ -135,10 +135,11 @@
         </form>
       </td>
       <td>
-        <form action="/borrows/extend" method="post" th:if="${borrow.isExtended == 0}">
+        <form action="/borrows/extend" method="post" th:if="${borrow.isExtended == 0 and borrow.returnDate == null}">
           <input type="hidden" name="borrowId" th:value="${borrow.borrowId}" />
           <button type="submit" class="button button-extend">연장</button>
         </form>
+
       </td>
     </tr>
     </tbody>
